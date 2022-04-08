@@ -12,12 +12,15 @@ let userArr = [
         "age": 40
     }
 ]
+let body
 http.createServer(function (req,res){
     console.log('ServerWork')
-    if(req.method === 'GET'){
+    switch(req.method){
+        case 'GET':
         res.end(JSON.stringify(userArr.flat()))
-    }else if(req.method === 'POST'){
-        let body = '';
+            break;
+        case 'POST':
+        body = '';
         req.on('data', chunk => {
             body += chunk.toString()
         });
@@ -25,8 +28,9 @@ http.createServer(function (req,res){
             userArr.push(JSON.parse(body))
             res.end('User has been added')
         });
-    }else if(req.method === 'PUT') {
-        let body = '';
+            break;
+        case 'PUT':
+            body = ''
         req.on('data', chunk => {
             body += chunk.toString()
         });
@@ -34,7 +38,8 @@ http.createServer(function (req,res){
             userArr.splice(0,userArr.length,JSON.parse(body))
             res.end('Array with users has been overwritten')
         });
-    }else{
+            break;
+        default:
         res.end(JSON.stringify(userArr))
     }
 }).listen(6000);
