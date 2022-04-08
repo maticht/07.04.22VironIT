@@ -1,30 +1,28 @@
-let newUser
 const http = require('http');
-const {parse} = require('querystring')
-// const url = require('url')
 
 let userArr = [
     {
         "id": 1,
         "name": 'Alex',
         "age": 50
+    },
+    {
+        "id": 2,
+        "name": 'Max',
+        "age": 40
     }
 ]
-// JSON.stringify(userArr)
 http.createServer(function (req,res){
     console.log('ServerWork')
     if(req.method === 'GET'){
-        res.end(JSON.stringify(userArr))
+        res.end(JSON.stringify(userArr.flat()))
     }else if(req.method === 'POST'){
         let body = '';
         req.on('data', chunk => {
             body += chunk.toString()
         });
         req.on('end', () => {
-            userArr.push(parse(body))
-            console.log(parse(body))
-                console.log(body)
-            console.log(userArr)
+            userArr.push(JSON.parse(body))
             res.end('User has been added')
         });
     }else if(req.method === 'PUT') {
@@ -33,11 +31,10 @@ http.createServer(function (req,res){
             body += chunk.toString()
         });
         req.on('end', () => {
-            userArr.splice(0,userArr.length,parse(body))
-            res.end('User has been added')
+            userArr.splice(0,userArr.length,JSON.parse(body))
+            res.end('Array with users has been overwritten')
         });
     }else{
         res.end(JSON.stringify(userArr))
     }
-
-}).listen(6000,'127.0.0.1');
+}).listen(6000);
